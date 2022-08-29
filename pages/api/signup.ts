@@ -1,9 +1,8 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../lib/prisma";
 import { omit } from "../../helpers/omit";
+import { createAuthCookie, createUserAuthToken } from "../../helpers/auth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const salt = bcrypt.genSaltSync();
@@ -22,26 +21,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(401);
     return res.json({ error: "User already exists" });
   }
-  const token = jwt.sign(
-    {
-      email: user.email,
-      id: user.id,
-      time: Date.now(),
-    },
-    "hello",
-    {
-      expiresIn: "8h",
-    }
-  );
-  res.setHeader(
-    "Set-Cookie",
-    cookie.serialize("TRACKS_ACCESS_TOKEN", token, {
-      httpOnly: true,
-      maxAge: 8 * 60 * 60,
-      path: "/",
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-    })
-  );
+  const token = createUserAuthToken(user);
+  res.setHeader("Set-Cookie", createAuthCookie(token));
   res.json(omit(user, "password"));
 };

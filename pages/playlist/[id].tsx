@@ -34,13 +34,22 @@ const Playlist = ({ playlist }) => {
 };
 
 export const getServerSideProps = async ({ query, req }) => {
-  const { id: userId } = validateToken(
-    req.cookies[process.env.ACCESS_TOKEN_KEY]
-  );
+  let user;
+
+  try {
+    user = validateToken(req.cookies[process.env.ACCESS_TOKEN_KEY]);
+  } catch (error) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/signin",
+      },
+    };
+  }
   const playlist = await prisma.playlist.findFirst({
     where: {
       id: parseInt(query.id, 10),
-      userId,
+      userId: user.id,
     },
     include: {
       songs: {

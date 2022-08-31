@@ -1,5 +1,6 @@
 import { Box } from "@chakra-ui/layout";
 import { ReactNode } from "react";
+import Playerbar from "../playerBar";
 import Sidebar from "../sidebar";
 
 interface Props {
@@ -16,7 +17,7 @@ const PlayerLayout = ({ children }: Props) => {
         <Box height="calc(100vh - 100px)">{children}</Box>
       </Box>
       <Box position="absolute" left="0" bottom="0" height="100px">
-        player
+        <Playerbar />
       </Box>
     </Box>
   );

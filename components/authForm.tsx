@@ -2,7 +2,6 @@ import { Box, Flex, Input, Button } from "@chakra-ui/react";
 import NextImage from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useSWRConfig } from "swr";
 import { auth } from "../lib/mutations";
 
 interface Props {
@@ -12,6 +11,8 @@ interface Props {
 const AuthForm = ({ mode }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [isLoading, setIsloading] = useState(false);
   const router = useRouter();
 
@@ -19,7 +20,13 @@ const AuthForm = ({ mode }: Props) => {
     e.preventDefault();
     setIsloading(true);
 
-    await auth(mode, { email, password });
+    let payload: Record<string, string> = { email, password };
+
+    if (mode === "signup") {
+      payload = { ...payload, firstname, lastname };
+    }
+
+    await auth(mode, payload);
     setIsloading(false);
     router.push("/");
   };
@@ -37,14 +44,32 @@ const AuthForm = ({ mode }: Props) => {
       <Flex justify="center" align="center" height="calc(100vh - 100px)">
         <Box padding="50px" bg="gray.900" borderRadius="6px">
           <form onSubmit={handleSubmit}>
+            {mode === "signup" && (
+              <>
+                <Input
+                  placeholder="Firstname"
+                  type="text"
+                  required
+                  onChange={(e) => setFirstname(e.target.value)}
+                />
+                <Input
+                  placeholder="Lastname"
+                  type="text"
+                  required
+                  onChange={(e) => setLastname(e.target.value)}
+                />
+              </>
+            )}
             <Input
               placeholder="Email"
               type="email"
+              required
               onChange={(e) => setEmail(e.target.value)}
             />
             <Input
               placeholder="Password"
               type="password"
+              required
               onChange={(e) => setPassword(e.target.value)}
             />
             <Button

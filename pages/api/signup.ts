@@ -6,7 +6,7 @@ import { createAuthCookie, createUserAuthToken } from "../../helpers/auth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const salt = bcrypt.genSaltSync();
-  const { email, password } = req.body;
+  const { email, password, firstname, lastname } = req.body;
 
   let user;
 
@@ -15,6 +15,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       data: {
         email,
         password: bcrypt.hashSync(password, salt),
+        firstname,
+        lastname,
       },
     });
   } catch (error) {

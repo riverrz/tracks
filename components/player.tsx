@@ -25,7 +25,7 @@ import { useStoreActions } from "easy-peasy";
 import { formatTime } from "../helpers/formatters";
 
 const Player = ({ songs, activeSong }) => {
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
   const [index, setIndex] = useState(
     songs.findIndex((s) => s.id === activeSong.id)
   );

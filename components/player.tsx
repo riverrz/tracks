@@ -24,14 +24,22 @@ import { useStoreActions } from "easy-peasy";
 import { formatTime } from "../helpers/formatters";
 
 const Player = ({ songs, activeSong }) => {
-  const [playing, setPlaying] = useState(true);
-  const [index, setIndex] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [index, setIndex] = useState(
+    songs.findIndex((s) => s.id === activeSong.id)
+  );
   const [seek, setSeek] = useState(0.0);
   const [repeat, setRepeat] = useState(false);
   const [shuffle, setShuffle] = useState(false);
   const [isSeeking, setIsSeeking] = useState(false);
   const [duration, setDuration] = useState(0.0);
   const soundRef = useRef(null);
+  const repeatRef = useRef(repeat);
+  const setActiveSong = useStoreActions((state: any) => state.changeActiveSong);
+
+  useEffect(() => {
+    repeatRef.current = repeat;
+  }, [repeat]);
 
   useEffect(() => {
     let timerId;
@@ -47,6 +55,10 @@ const Player = ({ songs, activeSong }) => {
 
     cancelAnimationFrame(timerId);
   }, [playing, isSeeking]);
+
+  useEffect(() => {
+    setActiveSong(songs[index]);
+  }, [index, songs, setActiveSong]);
 
   const setPlayState = (value: boolean) => {
     setPlaying(value);
@@ -77,7 +89,7 @@ const Player = ({ songs, activeSong }) => {
   };
 
   const onEnd = () => {
-    if (repeat) {
+    if (repeatRef.current) {
       setSeek(0);
       soundRef.current.seek(0);
     } else {

@@ -1,9 +1,9 @@
 import { Box } from "@chakra-ui/layout";
 import { Table, Thead, Td, Tr, Tbody, IconButton, Th } from "@chakra-ui/react";
 import { BsFillPlayFill } from "react-icons/bs";
+import { useStoreActions } from "easy-peasy";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { formatDate, formatTime } from "../helpers/formatters";
-import { useStoreActions } from "easy-peasy";
 
 interface Props {
   songs: any[];

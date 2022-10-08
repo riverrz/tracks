@@ -32,7 +32,7 @@ const SongsTable = ({ songs }: Props) => {
           />
         </Box>
         <Table variant="unstyled">
-          <Thead borderBottom="1px solid" borderColor="rgba(255,255,255,0.2)">
+          <Thead borderBottom="1px solid" borderColor="rgba(255,255,255,0.3)">
             <Tr>
               <Th>#</Th>
               <Th>Title</Th>
